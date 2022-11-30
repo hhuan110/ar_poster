@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/poster.unity
+    guid: c9078a5bf33491c4c9fa387748f6fd47
   m_configObjects: {}
