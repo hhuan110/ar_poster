@@ -206,6 +206,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: model
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1f6ea1c791ae7415cbf67bf74ca401cc, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2697759659653866132, guid: 1f6ea1c791ae7415cbf67bf74ca401cc, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.19045308
@@ -225,7 +229,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 1f6ea1c791ae7415cbf67bf74ca401cc, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 206dee6da82f647fc8aaead01fe50a25, type: 2}
+      objectReference: {fileID: 9100000, guid: c190dccd614494f8990a92001ec59763, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f6ea1c791ae7415cbf67bf74ca401cc, type: 3}
 --- !u!4 &108563398 stripped
@@ -635,6 +639,23 @@ MonoBehaviour:
   mCastedBehaviour: {fileID: 765735738}
   mMeshFilter: {fileID: 0}
   mMeshRenderer: {fileID: 0}
+--- !u!1 &1304482610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f6ea1c791ae7415cbf67bf74ca401cc, type: 3}
+  m_PrefabInstance: {fileID: 108563397}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1304482612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304482610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a1e030888a74db2894b3510696f285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1380940665
 GameObject:
   m_ObjectHideFlags: 0
