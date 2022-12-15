@@ -53,14 +53,14 @@ public class Hutao_controller : DefaultObserverEventHandler
         {
             Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             RaycastHit hit;
-            Debug.Log("test message");
+            //Debug.Log("test message");
 
             if (Physics.Raycast(raycast, out hit))
             {
                 if (hit.collider.tag == "PlayAudio")
                 {
                     // audio controls
-                    Debug.Log("hit play, should play");
+                    //Debug.Log("hit play, should play");
                     prerecorded.Play();
                     playButton.SetActive(false);
                     pauseButton.SetActive(true);
@@ -71,7 +71,7 @@ public class Hutao_controller : DefaultObserverEventHandler
                 else if (hit.collider.tag == "PauseAudio")
                 {
                     // audio controls
-                    Debug.Log("hit pause, should pause");
+                    //Debug.Log("hit pause, should pause");
                     prerecorded.Pause();
                     playButton.SetActive(true);
                     pauseButton.SetActive(false);
@@ -81,10 +81,10 @@ public class Hutao_controller : DefaultObserverEventHandler
                 }
                 else if (hit.collider.tag == "Player")
                 {
-                    Debug.Log("hit tag player");
+                    //Debug.Log("hit tag player");
                     if (defaultState)
                     {
-                        Debug.Log("default");
+                        //Debug.Log("default");
                         defaultState = false;
                         talkingState = true;
                         m_Animator.ResetTrigger("wave");
@@ -93,7 +93,7 @@ public class Hutao_controller : DefaultObserverEventHandler
                     }
                     else if (talkingState)
                     {
-                        Debug.Log("talk");
+                        //Debug.Log("talk");
                         talkingState = false;
                         wavingState = true;
                         m_Animator.ResetTrigger("Arm");
@@ -102,7 +102,7 @@ public class Hutao_controller : DefaultObserverEventHandler
                     }
                     else if(wavingState)
                     {
-                        Debug.Log("wave");
+                        //Debug.Log("wave");
                         talkingState = true;
                         wavingState = false;
                         m_Animator.ResetTrigger("wave");

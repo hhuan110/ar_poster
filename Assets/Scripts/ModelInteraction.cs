@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ModelInteraction : MonoBehaviour
 {
-    //GameObject model;
-    Vector3 minScale;
-    Vector3 maxScale;
     float initDist = 1f;
     bool scaleBoundsSet = false;
     Dictionary<GameObject, List<Vector3>> modelDict = new Dictionary<GameObject, List<Vector3>>();
@@ -14,18 +11,25 @@ public class ModelInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //model = GameObject.FindGameObjectWithTag("ModelInteract");
-        //minScale = transform.localScale * 0.5f;
-        //maxScale = transform.localScale * 2f;
+        GameObject[] interactables = GameObject.FindGameObjectsWithTag("ModelInteract");
+        foreach (GameObject g in interactables)
+        {
+            // rotations might not need to be stored the way the current size and limits do - no need to check
+            Vector3 modelInitScale = g.transform.localScale;
+            Vector3 modelMinScale = modelInitScale * 0.5f;
+            Vector3 modelMaxScale = modelInitScale * 2.0f;
+
+            // 0 = initial/current size, 1 = min size, 2 = max size
+            List<Vector3> modelLimits = new List<Vector3>() {
+                modelInitScale, modelMinScale, modelMaxScale
+            };
+            modelDict.Add(g, modelLimits);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(Input.GetTouch(0).deltaPosition.x + " " + Input.GetTouch(0).deltaPosition.y);
-        //transform.Rotate(0f, 0f, Input.GetTouch(0).deltaPosition.x * speedAdj);
-        //transform.Rotate(Input.GetTouch(0).deltaPosition.y * speedAdj, 0f, Input.GetTouch(0).deltaPosition.x * speedAdj);
-
         // tap and drag for rotation
         if ((Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Moved))
         {
@@ -38,10 +42,8 @@ public class ModelInteraction : MonoBehaviour
             {
                 if (hit.collider.tag == "ModelInteract")
                 {
-                    //Debug.Log(Input.GetTouch(0).deltaPosition.x + " " + Input.GetTouch(0).deltaPosition.y);
                     GameObject model = hit.collider.gameObject;
-                    model.transform.Rotate(0f, 0f, t1.deltaPosition.x * speedAdj);
-                    //transform.Rotate(Input.GetTouch(0).deltaPosition.x, Input.GetTouch(0).deltaPosition.y, 0f);
+                    model.transform.Rotate(0f, 0f, -t1.deltaPosition.x * speedAdj);
                 }
 
             }
@@ -58,45 +60,70 @@ public class ModelInteraction : MonoBehaviour
             Vector2 midpoint = t1.position + (direction / 2f);
             Ray raycast = Camera.main.ScreenPointToRay(midpoint);
             RaycastHit hit;
-            //Vector3 initScale = transform.localScale;
-            Vector3 initScale;
 
+            // if the midpoint ray hits something
             if (Physics.Raycast(raycast, out hit))
             {
                 // if the midpoint hits the object
                 if (hit.collider.tag == "ModelInteract")
                 {
+                    // identify the object hit and initialize the var that holds the limits/values used for the object
                     GameObject model = hit.collider.gameObject;
-                    initScale = model.transform.localScale;
-                    if (!scaleBoundsSet)
-                    {
-                        minScale = initScale * 0.5f;
-                        maxScale = initScale * 2f;
-                        scaleBoundsSet = true;
-                    }
-                    // if touchphase is began, get the intial distance for scale
+                    List<Vector3> currModelLimits;
+                    currModelLimits = modelDict[model];
+
+                    // if touchphase is began, get the intial distance for scale - doesn't require model-specific limits
                     if (t1.phase == TouchPhase.Began || t2.phase == TouchPhase.Began)
                     {
                         Vector2 t1PosInit = t1.position;
                         Vector2 t2PosInit = t2.position;
                         initDist = Vector2.Distance(t1PosInit, t2PosInit);
                     }
-                    // if touchphase is end, get the new distances for scale and then scale the object
+                    // if touchphase is moved, get the new distances for scale and then scale the object - requires model-specific limits
                     else if (t1.phase == TouchPhase.Moved || t2.phase == TouchPhase.Moved)
                     {
+                        // calculate how much to scale the object
                         Vector2 t1PosMove = t1.position;
                         Vector2 t2PosMove = t2.position;
-
                         float moveDist = Vector2.Distance(t1PosMove, t2PosMove);
                         float scale = (moveDist / initDist);
-                        if (((initScale.x < minScale.x || initScale.y < minScale.y || initScale.z < minScale.z) && scale > 1.0f) ||
-                            ((initScale.x > maxScale.x || initScale.y > maxScale.y || initScale.z > maxScale.z) && scale < 1.0f) || 
+
+                        // pull out the values for readability
+                        Vector3 initScale = currModelLimits[0];
+                        Vector3 minScale = currModelLimits[1];
+                        Vector3 maxScale = currModelLimits[2];
+
+                        // conditions - size is below the min and scaling up, size is above the max and scaling down, or within the bounds
+                        // if one of these is true, modify the size
+                        if (((initScale.x <= minScale.x || initScale.y <= minScale.y || initScale.z <= minScale.z) && scale > 1.0f) ||
+                            ((initScale.x >= maxScale.x || initScale.y >= maxScale.y || initScale.z >= maxScale.z) && scale < 1.0f) || 
                             (((initScale.x > minScale.x && initScale.y > minScale.y && initScale.z > minScale.z) &&
                             (initScale.x < maxScale.x && initScale.y < maxScale.y && initScale.z < maxScale.z))))
                         {
-                            initScale *= scale;
-                            model.transform.localScale = initScale * scale;
-                        }
+                            // transform the object
+                            // ok check that the transformation won't yank it outside of its limits
+                            Vector3 newScale = initScale * scale;
+                            // if anything's bigger, lock to max
+                            if (newScale.x >= maxScale.x || newScale.y >= maxScale.y || newScale.z >= maxScale.z)
+                            {
+                                model.transform.localScale = maxScale;
+                            }
+                            // if anything's smaller, lock to min
+                            else if (newScale.x <= minScale.x || newScale.y <= minScale.y || newScale.z <= minScale.z)
+                            {
+                                model.transform.localScale = minScale;
+                            }
+                            // otherwise transform
+                            else
+                            {
+                                model.transform.localScale = initScale * scale;
+                            }
+
+                            // save the updated values to the object
+                            initScale = model.transform.localScale;
+                            currModelLimits[0] = initScale;
+                            modelDict[model] = currModelLimits;
+                        }   
                     }
                 }
             }
