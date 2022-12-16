@@ -52,3 +52,8 @@ This project was edited using Unity 2021.3.13f1
 7. Returning to the Build Settings menu, click Build And Run, saving the generated .apk file to a Builds folder that you create. 
 
 ## Deployment to iOS
+1. Click on file on the top menu, then click on build settings, make sure you choose ios as the platform.
+2. Click on player settings, search for camera usage description, and write something there(ortherwise it won't build).
+3. Click on build, after build succeed, open the file Unity-iPhone.xcodeproj with Xcode.
+4. In Xcode find Signing & Capabilities. Click on Automatically manage signing and use your appleid to create account/sign.
+5. After all these, you should be able to build it to you iphone(connect you mac and iphone with a cable).
