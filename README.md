@@ -30,7 +30,7 @@ This project was edited using Unity 2021.3.13f1
 
 4. The skull model file located at Assets/Models/skull.fbx was uploaded using GitHub's lfs. If the model is not found in the project, it can be downloaded from [this link](https://drive.google.com/file/d/1uTVcR0cIUeYg-HT1DJ3xL6QFUFOTGamq/view?usp=share_link). Download this file and replace it in the directory. 
 
-5. Click the run button at the top to run the project locally. The targets used in the project can be found [here](https://github.com/hhuan110/ar_poster/READMEAssets/printable_markers.pdf). 
+5. Click the run button at the top to run the project locally. The targets used in the project can be found [here](https://github.com/hhuan110/ar_poster/blob/main/READMEAssets/printable_markers.pdf). 
 
 ## Sources of Markers/Models
 1. Abdomen model from class, used in an in class exercise
